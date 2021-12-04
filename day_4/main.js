@@ -84,7 +84,7 @@ const calculateScore = (board, winningNumber) => {
     .reduce((sum, curr) => sum + curr.value, 0);
   return unmarkedSum * winningNumber;
 };
-const main = () => {
+const part1 = () => {
   const parts = fs.readFileSync("input.txt").toString().split("\n\n");
 
   const pickedNumbers = parts[0].split(",");
@@ -96,6 +96,37 @@ const main = () => {
     pickedNumbers
   );
   const score = calculateScore(winningBoard, winningNumber);
-  console.log(score);
+  console.log("part 1 score:", score);
 };
-main();
+part1();
+
+const getLastBoardToWin = (boards, pickedNumbers) => {
+  let markedBoards = boards;
+  for (let i = 0; i < pickedNumbers.length; i++) {
+    markedBoards = markedBoards.map((b) => markABoard(b, pickedNumbers[i]));
+    const winningBoards = markedBoards.filter(boardIsInWinningState);
+    const losingBoards = markedBoards.filter((b) => !boardIsInWinningState(b));
+    if (markedBoards.length === 1 && winningBoards.length === 1) {
+      return {
+        lastBoardToWin: winningBoards[0],
+        winningNumber: pickedNumbers[i],
+      };
+    }
+    markedBoards = losingBoards;
+  }
+};
+const part2 = () => {
+  const parts = fs.readFileSync("input.txt").toString().split("\n\n");
+
+  const pickedNumbers = parts[0].split(",");
+
+  const boardStrings = parts.slice(1);
+  const boards = boardStrings.map(parseBoard);
+  const { lastBoardToWin, winningNumber } = getLastBoardToWin(
+    boards,
+    pickedNumbers
+  );
+  const score = calculateScore(lastBoardToWin, winningNumber);
+  console.log("part 2 score:", score);
+};
+part2();
