@@ -10,11 +10,23 @@ import (
 func main() {
 	fileName := "input.txt"
 	lines := readLineDefinitionsFromFile(fileName)
+	part1(lines)
+	part2(lines)
+}
+
+func part1(lines []Line) {
 	validLines := filterOutNonHorizontalOrVerticalLines(lines)
 	pointCounts := getIntersectionCountsAtEachPoint(validLines)
-
 	pointsWithMoreThan2Intersections := numberOfPointsWithMoreThan2IntersectingLines(pointCounts)
-	fmt.Println(pointsWithMoreThan2Intersections)
+
+	fmt.Println("Part 1 count:",pointsWithMoreThan2Intersections)
+}
+
+func part2(lines []Line) {
+	pointCounts := getIntersectionCountsAtEachPoint(lines)
+	pointsWithMoreThan2Intersections := numberOfPointsWithMoreThan2IntersectingLines(pointCounts)
+
+	fmt.Println("Part 2 count:", pointsWithMoreThan2Intersections)
 }
 
 func numberOfPointsWithMoreThan2IntersectingLines(pointCounts map[Point]int) int {
