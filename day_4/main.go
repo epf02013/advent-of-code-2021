@@ -45,6 +45,11 @@ func splitOnTwoNewLines(data []byte, atEOF bool) (advance int, token []byte, err
 }
 
 func main() {
+	part1()
+	part2()
+}
+
+func part1() {
 	f, err := os.Open("input.txt")
 	if err != nil {
 		fmt.Printf("error opening file: %v\n", err)
@@ -56,8 +61,24 @@ func main() {
 	scanner.Scan()
 	pickedNumbers := parsePickedNumbers(scanner.Text())
 	boards := parseBoards(scanner)
-	winningBoard,_ := getFirstBoardToWin(pickedNumbers, boards)
-	fmt.Println(winningBoard.calculateScore())
+	winningBoard, _ := getFirstBoardToWin(pickedNumbers, boards)
+	fmt.Println("Part 1 score:", winningBoard.calculateScore())
+}
+
+func part2() {
+	f, err := os.Open("input.txt")
+	if err != nil {
+		fmt.Printf("error opening file: %v\n", err)
+		os.Exit(1)
+	}
+	scanner := bufio.NewScanner(f)
+
+	scanner.Split(splitOnTwoNewLines)
+	scanner.Scan()
+	pickedNumbers := parsePickedNumbers(scanner.Text())
+	boards := parseBoards(scanner)
+	lastBoardToWin, _ := getLastBoardToWin(pickedNumbers, boards)
+	fmt.Println("Part 2 score:", lastBoardToWin.calculateScore())
 }
 
 func getFirstBoardToWin(pickedNumbers []int, boards []Board) (Board,error) {
@@ -68,6 +89,27 @@ func getFirstBoardToWin(pickedNumbers []int, boards []Board) (Board,error) {
 				return board, nil
 			}
 		}
+	}
+	return Board{}, errors.New("no winning board")
+}
+
+func getLastBoardToWin(pickedNumbers []int, boards []Board) (Board,error) {
+	candidateBoards := boards
+	for _, number := range pickedNumbers {
+		var winningBoards []Board
+		var losingBoards []Board
+		for _, board := range candidateBoards {
+			board.mark(number)
+			if board.hasWon() {
+				winningBoards = append(winningBoards, board)
+			} else {
+				losingBoards = append(losingBoards, board)
+			}
+		}
+		if len(winningBoards) == 1 && len(candidateBoards) == 1 {
+			return winningBoards[0], nil
+		}
+		candidateBoards = losingBoards
 	}
 	return Board{}, errors.New("no winning board")
 }
