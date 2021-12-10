@@ -1,6 +1,11 @@
 package main
 
-import "strings"
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strings"
+)
 
 type LineState struct {
 	isCorrupted           bool
@@ -41,4 +46,41 @@ func getLineState(line string)  LineState {
 	return LineState{
 		isCorrupted: false,
 	}
+}
+
+func getPoints(states []LineState) int {
+	pointMap := map[string]int{
+		")": 3,
+		"]": 57,
+		"}": 1197,
+		">": 25137,
+	}
+	sum := 0
+	for _, state := range states {
+		if state.isCorrupted {
+			sum += pointMap[state.illegalCharacter]
+		}
+	}
+	return sum
+}
+
+func main() {
+	lineStates := getLineStates("input.txt")
+	points := getPoints(lineStates)
+	fmt.Println("Part 1",points)
+}
+
+func getLineStates(fileNmae string) []LineState {
+	f, err := os.Open(fileNmae)
+	if err != nil {
+		fmt.Printf("error opening file: %v\n", err)
+		os.Exit(1)
+	}
+	scanner := bufio.NewScanner(f)
+	lineStates := []LineState{}
+	for scanner.Scan() {
+		text := scanner.Text()
+		lineStates = append(lineStates, getLineState(text))
+	}
+	return lineStates
 }
