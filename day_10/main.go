@@ -3,13 +3,16 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"github.com/montanaflynn/stats"
 	"os"
 	"strings"
 )
 
 type LineState struct {
-	isCorrupted           bool
-	illegalCharacter      string
+	isCorrupted      bool
+	illegalCharacter     string
+	incomplete           bool
+	completionCharacters []string
 }
 
 
@@ -22,14 +25,18 @@ func isOpeningCharacter(c string) bool {
 	}
 	return openingCharacterMap[c]
 }
-func charactersMatch(a string, b string) bool {
+func getClosingCharacter(c string) string{
+
 	characterMap  := map[string]string{
 		"(": ")",
 		"{": "}",
 		"[": "]",
 		"<": ">",
 	}
-	return characterMap[a] == b
+	return characterMap[c]
+}
+func charactersMatch(a string, b string) bool {
+	return getClosingCharacter(a) == b
 }
 func getLineState(line string)  LineState {
 	characters  := strings.Split(line, "")
@@ -43,32 +50,22 @@ func getLineState(line string)  LineState {
 			return LineState{isCorrupted: true, illegalCharacter: character}
 		}
 	}
-	return LineState{
-		isCorrupted: false,
-	}
-}
-
-func getPoints(states []LineState) int {
-	pointMap := map[string]int{
-		")": 3,
-		"]": 57,
-		"}": 1197,
-		">": 25137,
-	}
-	sum := 0
-	for _, state := range states {
-		if state.isCorrupted {
-			sum += pointMap[state.illegalCharacter]
+	if stack.size() == 0 {
+		return LineState{
+			isCorrupted: false,
+			incomplete:  false,
 		}
 	}
-	return sum
+	completionCharacters  := []string{}
+
+	for stack.size() > 0 {
+		item := ""
+		stack, item, _ = stack.pop()
+		completionCharacters = append(completionCharacters, getClosingCharacter(item))
+	}
+	return LineState{incomplete: true, completionCharacters: completionCharacters}
 }
 
-func main() {
-	lineStates := getLineStates("input.txt")
-	points := getPoints(lineStates)
-	fmt.Println("Part 1",points)
-}
 
 func getLineStates(fileNmae string) []LineState {
 	f, err := os.Open(fileNmae)
@@ -84,3 +81,50 @@ func getLineStates(fileNmae string) []LineState {
 	}
 	return lineStates
 }
+
+func getPointsForPart1(states []LineState) int {
+	pointMap := map[string]int{
+		")": 3,
+		"]": 57,
+		"}": 1197,
+		">": 25137,
+	}
+	sum := 0
+	for _, state := range states {
+		if state.isCorrupted {
+			sum += pointMap[state.illegalCharacter]
+		}
+	}
+	return sum
+}
+func getPointsForPart2(states []LineState) int {
+	pointMap := map[string]int{
+		")": 1,
+		"]": 2,
+		"}": 3,
+		">": 4,
+	}
+	scores := []float64{}
+	for _, state := range states {
+		if state.incomplete {
+			score := 0
+			for _, character := range state.completionCharacters {
+				score = score * 5
+				score += pointMap[character]
+			}
+			scores = append(scores, float64(score))
+		}
+	}
+	median,_ := stats.Median(scores)
+	return int(median)
+}
+
+func main() {
+	lineStates := getLineStates("input.txt")
+	points := getPointsForPart1(lineStates)
+	fmt.Println("Part 1",points)
+
+	pointsForPart2 := getPointsForPart2(lineStates)
+	fmt.Println("Part 2",pointsForPart2)
+}
+
