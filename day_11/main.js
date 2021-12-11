@@ -103,6 +103,18 @@ function part1(initialMatrix) {
   console.log("Part 1", pointsFlashed);
 }
 
+function part2(initialMatrix) {
+  let count = 1;
+  let currMatrix = initialMatrix;
+  while (count < 500) {
+    const { matrix, numberOfPointsFlashed } = takeStep(currMatrix);
+    if (numberOfPointsFlashed === 100) break;
+    currMatrix = matrix;
+    count += 1;
+  }
+  console.log("Part 2", count);
+}
+
 const main = () => {
   const initialMatrix = fs
     .readFileSync("input.txt")
@@ -117,6 +129,7 @@ const main = () => {
       }))
     );
   part1(initialMatrix);
+  part2(initialMatrix);
 };
 
 main();
