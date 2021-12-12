@@ -8,27 +8,25 @@ import (
 	"strings"
 )
 
-
 type TravelVector struct {
-	aim int
-	depth int
+	aim        int
+	depth      int
 	horizontal int
 }
 
 type Command struct {
-	aim int
+	aim      int
 	distance int
 }
-
 
 func parseCommand(command string) Command {
 	parts := strings.Split(command, " ")
 	commandType := parts[0]
 	distance, _ := strconv.Atoi(parts[1])
-	if commandType == "forward"{
+	if commandType == "forward" {
 		return Command{aim: 0, distance: distance}
 	}
-	if commandType == "down"{
+	if commandType == "down" {
 		return Command{aim: distance, distance: 0}
 	}
 	return Command{aim: -distance, distance: 0}
@@ -45,10 +43,10 @@ func main() {
 	for scanner.Scan() {
 		command := parseCommand(scanner.Text())
 		currentPosition = TravelVector{
-			depth: currentPosition.depth + command.distance*currentPosition.aim,
-			horizontal: currentPosition.horizontal+command.distance,
-			aim: currentPosition.aim + command.aim,
+			depth:      currentPosition.depth + command.distance*currentPosition.aim,
+			horizontal: currentPosition.horizontal + command.distance,
+			aim:        currentPosition.aim + command.aim,
 		}
 	}
-	fmt.Println(currentPosition.horizontal*currentPosition.depth)
+	fmt.Println(currentPosition.horizontal * currentPosition.depth)
 }

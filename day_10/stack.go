@@ -6,11 +6,11 @@ type Stack struct {
 
 func (stack Stack) pop() (Stack, string, error) {
 	return Stack{
-		items: stack.items[0:len(stack.items)-1],
+		items: stack.items[0 : len(stack.items)-1],
 	}, stack.items[len(stack.items)-1], nil
 }
 
-func (stack Stack) peek() (string) {
+func (stack Stack) peek() string {
 	return stack.items[len(stack.items)-1]
 }
 

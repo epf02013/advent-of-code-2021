@@ -14,9 +14,11 @@ func main() {
 
 type RollingSum struct {
 	startIndex int
-	endIndex int
-	array *[]int}
-func (rs RollingSum) addElement(index int) RollingSum{
+	endIndex   int
+	array      *[]int
+}
+
+func (rs RollingSum) addElement(index int) RollingSum {
 	if rs.endIndex-rs.startIndex >= 2 {
 		rs.startIndex += 1
 	}
@@ -25,9 +27,9 @@ func (rs RollingSum) addElement(index int) RollingSum{
 }
 
 func (rs *RollingSum) isFull() bool {
-	return	rs.endIndex-rs.startIndex >= 2
+	return rs.endIndex-rs.startIndex >= 2
 }
-func (rs *RollingSum) sum() int{
+func (rs *RollingSum) sum() int {
 	sum := 0
 	for i := rs.startIndex; i <= rs.endIndex; i++ {
 		sum += (*rs.array)[i]
@@ -43,7 +45,7 @@ func part2() {
 		os.Exit(1)
 	}
 	scanner := bufio.NewScanner(f)
-	array  := []int{}
+	array := []int{}
 	for scanner.Scan() {
 		parseInt, err := strconv.Atoi(scanner.Text())
 		if err != nil {
@@ -57,8 +59,8 @@ func part2() {
 	increases := 0
 
 	for i := 2; i < len(array); i++ {
-		trailingSum = trailingSum.addElement(i-1)
-		leadingSum =leadingSum.addElement(i)
+		trailingSum = trailingSum.addElement(i - 1)
+		leadingSum = leadingSum.addElement(i)
 		if trailingSum.isFull() && leadingSum.isFull() {
 			if trailingSum.sum() < leadingSum.sum() {
 				increases += 1

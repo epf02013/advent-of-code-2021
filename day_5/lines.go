@@ -38,7 +38,7 @@ func (line Line) getPoints() []Point {
 	var points []Point
 	simplifiedSlope := line.simplifiedSlope()
 	var currentPoint = line.p0
-	for currentPoint != line.p1  {
+	for currentPoint != line.p1 {
 		points = append(points, currentPoint)
 		currentPoint = Point{
 			x: currentPoint.x + simplifiedSlope.x,

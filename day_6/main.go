@@ -24,8 +24,8 @@ func main() {
 func getInitialFishTimers(fileName string) []int {
 	f, err := os.Open(fileName)
 	if err != nil {
-	    fmt.Printf("error opening file: %v\n", err)
-	    os.Exit(1)
+		fmt.Printf("error opening file: %v\n", err)
+		os.Exit(1)
 	}
 	scanner := bufio.NewScanner(f)
 

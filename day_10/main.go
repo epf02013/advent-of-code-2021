@@ -9,15 +9,14 @@ import (
 )
 
 type LineState struct {
-	isCorrupted      bool
+	isCorrupted          bool
 	illegalCharacter     string
 	incomplete           bool
 	completionCharacters []string
 }
 
-
 func isOpeningCharacter(c string) bool {
-	openingCharacterMap  := map[string]bool{
+	openingCharacterMap := map[string]bool{
 		"(": true,
 		"{": true,
 		"[": true,
@@ -25,9 +24,9 @@ func isOpeningCharacter(c string) bool {
 	}
 	return openingCharacterMap[c]
 }
-func getClosingCharacter(c string) string{
+func getClosingCharacter(c string) string {
 
-	characterMap  := map[string]string{
+	characterMap := map[string]string{
 		"(": ")",
 		"{": "}",
 		"[": "]",
@@ -38,13 +37,13 @@ func getClosingCharacter(c string) string{
 func charactersMatch(a string, b string) bool {
 	return getClosingCharacter(a) == b
 }
-func getLineState(line string)  LineState {
-	characters  := strings.Split(line, "")
+func getLineState(line string) LineState {
+	characters := strings.Split(line, "")
 	stack := Stack{}
 	for _, character := range characters {
 		if isOpeningCharacter(character) {
 			stack = stack.push(character)
-		} else if stack.size() > 0 && charactersMatch(stack.peek(), character){
+		} else if stack.size() > 0 && charactersMatch(stack.peek(), character) {
 			stack, _, _ = stack.pop()
 		} else {
 			return LineState{isCorrupted: true, illegalCharacter: character}
@@ -56,7 +55,7 @@ func getLineState(line string)  LineState {
 			incomplete:  false,
 		}
 	}
-	completionCharacters  := []string{}
+	completionCharacters := []string{}
 
 	for stack.size() > 0 {
 		item := ""
@@ -65,7 +64,6 @@ func getLineState(line string)  LineState {
 	}
 	return LineState{incomplete: true, completionCharacters: completionCharacters}
 }
-
 
 func getLineStates(fileNmae string) []LineState {
 	f, err := os.Open(fileNmae)
@@ -115,16 +113,15 @@ func getPointsForPart2(states []LineState) int {
 			scores = append(scores, float64(score))
 		}
 	}
-	median,_ := stats.Median(scores)
+	median, _ := stats.Median(scores)
 	return int(median)
 }
 
 func main() {
 	lineStates := getLineStates("input.txt")
 	points := getPointsForPart1(lineStates)
-	fmt.Println("Part 1",points)
+	fmt.Println("Part 1", points)
 
 	pointsForPart2 := getPointsForPart2(lineStates)
-	fmt.Println("Part 2",pointsForPart2)
+	fmt.Println("Part 2", pointsForPart2)
 }
-

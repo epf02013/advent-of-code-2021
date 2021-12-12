@@ -10,15 +10,15 @@ import (
 func main() {
 	f, err := os.Open("input.txt")
 	if err != nil {
-	    fmt.Printf("error opening file: %v\n", err)
-	    os.Exit(1)
+		fmt.Printf("error opening file: %v\n", err)
+		os.Exit(1)
 	}
 	scanner := bufio.NewScanner(f)
 
 	count := 0
 	for scanner.Scan() {
-	    text := scanner.Text()
-	    rightSide := strings.TrimPrefix(strings.Split(text, "|")[1], " ")
+		text := scanner.Text()
+		rightSide := strings.TrimPrefix(strings.Split(text, "|")[1], " ")
 		numberStrings := strings.Split(rightSide, " ")
 		for _, numberString := range numberStrings {
 			length := len(numberString)

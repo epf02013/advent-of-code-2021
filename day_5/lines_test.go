@@ -20,8 +20,8 @@ func TestParseLine(t *testing.T) {
 				lineString: "0,9 -> 5,9",
 			},
 			want: Line{
-				p0: Point{x:0, y: 9},
-				p1: Point{x:5, y: 9},
+				p0: Point{x: 0, y: 9},
+				p1: Point{x: 5, y: 9},
 			},
 		},
 	}
@@ -43,8 +43,8 @@ func TestSimplifiedSlope(t *testing.T) {
 		{
 			name: "Getting simplified slope of line",
 			line: Line{
-				p0: Point{x:0, y: 0},
-				p1: Point{x:6, y: 8},
+				p0: Point{x: 0, y: 0},
+				p1: Point{x: 6, y: 8},
 			},
 			want: Slope{x: 3, y: 4},
 		},
@@ -67,16 +67,16 @@ func TestGetPoints(t *testing.T) {
 		{
 			name: "Get Points",
 			line: Line{
-				p0: Point{x:0, y: 0},
-				p1: Point{x:6, y: 8},
+				p0: Point{x: 0, y: 0},
+				p1: Point{x: 6, y: 8},
 			},
 			want: []Point{{x: 0, y: 0}, {x: 3, y: 4}, {x: 6, y: 8}},
 		},
 		{
 			name: "Get Points",
 			line: Line{
-				p0: Point{x:2, y: 2},
-				p1: Point{x:2, y: 1},
+				p0: Point{x: 2, y: 2},
+				p1: Point{x: 2, y: 1},
 			},
 			want: []Point{{x: 2, y: 2}, {x: 2, y: 1}},
 		},

@@ -11,14 +11,14 @@ import (
 
 func parsePickedNumbers(numPicks string) []int {
 	var pickedNumbers []int
-	for _, s := range strings.Split(numPicks,","){
+	for _, s := range strings.Split(numPicks, ",") {
 		number, _ := strconv.Atoi(s)
 		pickedNumbers = append(pickedNumbers, number)
 	}
 	return pickedNumbers
 }
 
-func parseBoards(scanner *bufio.Scanner) []Board{
+func parseBoards(scanner *bufio.Scanner) []Board {
 	var boards []Board
 	for scanner.Scan() {
 		boardString := scanner.Text()
@@ -81,7 +81,7 @@ func part2() {
 	fmt.Println("Part 2 score:", lastBoardToWin.calculateScore())
 }
 
-func getFirstBoardToWin(pickedNumbers []int, boards []Board) (Board,error) {
+func getFirstBoardToWin(pickedNumbers []int, boards []Board) (Board, error) {
 	for _, number := range pickedNumbers {
 		for _, board := range boards {
 			board.mark(number)
@@ -93,7 +93,7 @@ func getFirstBoardToWin(pickedNumbers []int, boards []Board) (Board,error) {
 	return Board{}, errors.New("no winning board")
 }
 
-func getLastBoardToWin(pickedNumbers []int, boards []Board) (Board,error) {
+func getLastBoardToWin(pickedNumbers []int, boards []Board) (Board, error) {
 	candidateBoards := boards
 	for _, number := range pickedNumbers {
 		var winningBoards []Board

@@ -9,14 +9,14 @@ import (
 )
 
 type Vector struct {
-	depth int
+	depth      int
 	horizontal int
 }
 
 func (v1 Vector) add(v2 Vector) Vector {
 	return Vector{
-		depth: v1.depth+v2.depth,
-		horizontal: v1.horizontal+v2.horizontal,
+		depth:      v1.depth + v2.depth,
+		horizontal: v1.horizontal + v2.horizontal,
 	}
 }
 
@@ -24,10 +24,10 @@ func parseVector(command string) Vector {
 	parts := strings.Split(command, " ")
 	commandType := parts[0]
 	distance, _ := strconv.Atoi(parts[1])
-	if commandType == "forward"{
+	if commandType == "forward" {
 		return Vector{depth: 0, horizontal: distance}
 	}
-	if commandType == "down"{
+	if commandType == "down" {
 		return Vector{depth: distance, horizontal: 0}
 	}
 	return Vector{depth: -distance, horizontal: 0}
