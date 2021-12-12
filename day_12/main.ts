@@ -37,8 +37,27 @@ const part1 = (graph: Graph) => {
   }
   console.log("Part 1", finalPaths.length)
 }
-
+const part2 = (graph: Graph) => {
+  const stack:{name: string, path: string[], hasDup: boolean}[] = [{name:'start', path: [],hasDup: false}]
+  const finalPaths: string[][] = []
+  while (stack.length > 0) {
+    const currentNode = stack.pop()!
+    const isASmallCave = currentNode.name === currentNode.name.toLowerCase();
+    const isAVisitedSmallCave = currentNode.path.includes(currentNode.name) && isASmallCave;
+    currentNode.path.push(currentNode.name)
+    if(currentNode.name === "end") {
+      finalPaths.push(currentNode.path)
+    } else if(!isAVisitedSmallCave || (!currentNode.hasDup && currentNode.name != "start")) {
+      const neighbours = graph[currentNode.name].neighbours
+      neighbours.forEach(neighbour => {
+        stack.push({name: neighbour, path: [...currentNode.path], hasDup: currentNode.hasDup || isAVisitedSmallCave})
+      })
+    }
+  }
+  console.log("Part 2", finalPaths.length)
+}
 const graphString = fs.readFileSync("input.txt").toString()
 const graph = parseGraph(graphString)
 part1(graph)
+part2(graph)
 
