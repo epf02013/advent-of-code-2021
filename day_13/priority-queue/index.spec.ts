@@ -24,12 +24,12 @@ describe("PriorityQueue", () => {
           queue.enqueue("3", 3);
           queue.enqueue("3", 3);
           expect([
-            queue.dequeue(),
-            queue.dequeue(),
-            queue.dequeue(),
-            queue.dequeue(),
-            queue.dequeue(),
-            queue.dequeue(),
+            queue.dequeue().value,
+            queue.dequeue().value,
+            queue.dequeue().value,
+            queue.dequeue().value,
+            queue.dequeue().value,
+            queue.dequeue().value,
           ]).toEqual(["Number one", "Number 2", "3", "3", "3", "4"]);
         });
       });
@@ -43,12 +43,12 @@ describe("PriorityQueue", () => {
           queue.enqueue("3", 3);
           queue.enqueue("3", 3);
           expect([
-            queue.dequeue(),
-            queue.dequeue(),
-            queue.dequeue(),
-            queue.dequeue(),
-            queue.dequeue(),
-            queue.dequeue(),
+            queue.dequeue().value,
+            queue.dequeue().value,
+            queue.dequeue().value,
+            queue.dequeue().value,
+            queue.dequeue().value,
+            queue.dequeue().value,
           ]).toEqual(["4", "3", "3", "3", "2", "1"]);
         });
       });

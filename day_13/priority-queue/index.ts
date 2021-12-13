@@ -37,8 +37,8 @@ export class PriorityQueue<T> {
       this.items[i1].priority > this.items[i2].priority ? i1 : i2;
     return indexOfPriorityItem;
   }
-  dequeue(): T {
-    const returnValue = this.items[0].value;
+  dequeue(): { value: T; priority: number } {
+    const returnValue = this.items[0];
     this.size -= 1;
     this.items[0] = this.items[this.size];
     this.items[this.size] = null;
@@ -58,6 +58,6 @@ export class PriorityQueue<T> {
       this.items[priorityChildIndex] = temp;
       index = priorityChildIndex;
     }
-    return returnValue;
+    return { value: returnValue.value, priority: returnValue.priority };
   }
 }
