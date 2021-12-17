@@ -23,7 +23,13 @@ func ParsePacketVersionAndId(bitString []string) (int, int) {
 	return int(version),int(typeId)
 }
 
-func ParseValueAndEndFromLiteralPacket(bitString []string) (int64, int) {
+type PacketInfo struct {
+	VersionSums int
+	Length      int
+	Value int
+}
+
+func ParsePacketInfoFromLiteralPacket(bitString []string) PacketInfo {
 	literalValueLength := len(bitString) - ((len(bitString) - 6)%5)
 	valueBits := []string{}
 
@@ -38,5 +44,41 @@ func ParseValueAndEndFromLiteralPacket(bitString []string) (int64, int) {
 	numberOfTrailingZeros := numberOfParsedBits % 4
 	endPosition := numberOfParsedBits + numberOfTrailingZeros - 1 + 6
 	value, _ := strconv.ParseInt(strings.Join(valueBits, ""), 2, 64)
-	return value, endPosition
+	version, _ := ParsePacketVersionAndId(bitString)
+	return PacketInfo{ Value: int(value), Length: endPosition, VersionSums: version }
+}
+
+func ParseOperatorSubPacketInfosByLength(bitString []string) ([]PacketInfo, int) {
+	lengthOfSubPackets, _ := strconv.ParseInt(strings.Join(bitString[7:22], ""), 2, 64)
+	var packetInfos []PacketInfo
+	for i := 22; i < 22 + int(lengthOfSubPackets); {
+		_, typeId := ParsePacketVersionAndId(bitString[i:i+7])
+		var packetInfo PacketInfo
+		if typeId == 4 {
+			packetInfo = ParsePacketInfoFromLiteralPacket(bitString[i:])
+			packetInfos = append(packetInfos, packetInfo)
+		}
+		i += packetInfo.Length
+	}
+	return packetInfos, int(lengthOfSubPackets) + 22
+}
+
+
+func ParseOperatorPacketInfo(bitString []string) PacketInfo {
+	version, _  := ParsePacketVersionAndId(bitString)
+	lengthTypeId := bitString[6]
+	if lengthTypeId == "0" {
+		packetInfos, length := ParseOperatorSubPacketInfosByLength(bitString)
+		versionSumOfSubPackets := sumVersions(packetInfos)
+		return PacketInfo{VersionSums: versionSumOfSubPackets + version, Length: length}
+	}
+	return PacketInfo{VersionSums: version}
+}
+
+func sumVersions(packetInfos []PacketInfo) int {
+	versionSumOfSubPackets := 0
+	for _, info := range packetInfos {
+		versionSumOfSubPackets += info.VersionSums
+	}
+	return versionSumOfSubPackets
 }

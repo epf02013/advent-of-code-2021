@@ -22,8 +22,16 @@ func TestParsePacketVersionAndId(t *testing.T) {
 
 func TestParseValueAndEndFromLiteralPacket(t *testing.T) {
 	bitString := strings.Split("110100101111111000101000", "")
-	value,endPosition := ParseValueAndEndFromLiteralPacket(bitString)
+	packetInfo := ParsePacketInfoFromLiteralPacket(bitString)
 
-	assert.Equal(t, 2021,int(value))
-	assert.Equal(t, len(bitString) -1,endPosition)
+	assert.Equal(t, 2021,packetInfo.Value)
+	assert.Equal(t, len(bitString) -1,packetInfo.Length)
+}
+
+func TestParseOperatorPacketInfo(t *testing.T) {
+	bitString := strings.Split("00111000000000000110111101000101001010010001001000000000", "")
+	var packetInfo PacketInfo = ParseOperatorPacketInfo(bitString)
+
+	assert.Equal(t, 9, packetInfo.VersionSums)
+	assert.Equal(t, len(bitString) - 7, packetInfo.Length)
 }
