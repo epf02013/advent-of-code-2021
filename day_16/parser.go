@@ -30,7 +30,7 @@ func ParseValueAndEndFromLiteralPacket(bitString []string) (int64, int) {
 	for i := 6; i < literalValueLength-4; i+=5 {
 		elems := bitString[i+1 : i+5]
 		valueBits = append(valueBits, elems...)
-		if bitString[0] == "0" {
+		if bitString[i] == "0" {
 			break
 		}
 	}
