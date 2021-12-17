@@ -22,3 +22,21 @@ func ParsePacketVersionAndId(bitString []string) (int, int) {
 
 	return int(version),int(typeId)
 }
+
+func ParseValueAndEndFromLiteralPacket(bitString []string) (int64, int) {
+	literalValueLength := len(bitString) - ((len(bitString) - 6)%5)
+	valueBits := []string{}
+
+	for i := 6; i < literalValueLength-4; i+=5 {
+		elems := bitString[i+1 : i+5]
+		valueBits = append(valueBits, elems...)
+		if bitString[0] == "0" {
+			break
+		}
+	}
+	numberOfParsedBits := (5 * len(valueBits)) / 4
+	numberOfTrailingZeros := numberOfParsedBits % 4
+	endPosition := numberOfParsedBits + numberOfTrailingZeros - 1 + 6
+	value, _ := strconv.ParseInt(strings.Join(valueBits, ""), 2, 64)
+	return value, endPosition
+}

@@ -19,3 +19,11 @@ func TestParsePacketVersionAndId(t *testing.T) {
 	assert.Equal(t, 6, version)
 	assert.Equal(t, 4, typeId)
 }
+
+func TestParseValueAndEndFromLiteralPacket(t *testing.T) {
+	bitString := strings.Split("110100101111111000101000", "")
+	value,endPosition := ParseValueAndEndFromLiteralPacket(bitString)
+
+	assert.Equal(t, 2021,int(value))
+	assert.Equal(t, len(bitString) -1,endPosition)
+}
