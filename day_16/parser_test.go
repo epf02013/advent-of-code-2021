@@ -11,3 +11,11 @@ func TestHexToBinary(t *testing.T) {
 	bitString := HexToBinary(hexString)
 	assert.Equal(t, strings.Split("110100101111111000101000", ""),bitString)
 }
+
+func TestParsePacketVersionAndId(t *testing.T) {
+	bitString := strings.Split("110100101111111000101000", "")
+	var version, typeId int = ParsePacketVersionAndId(bitString)
+
+	assert.Equal(t, 6, version)
+	assert.Equal(t, 4, typeId)
+}

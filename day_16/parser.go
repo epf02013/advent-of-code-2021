@@ -16,3 +16,9 @@ func HexToBinary(hexString string) []string {
 	return parts
 }
 
+func ParsePacketVersionAndId(bitString []string) (int, int) {
+	version, _ := strconv.ParseInt(strings.Join(bitString[0:3], ""), 2, 64)
+	typeId, _ := strconv.ParseInt(strings.Join(bitString[3:6], ""), 2, 4)
+
+	return int(version),int(typeId)
+}
