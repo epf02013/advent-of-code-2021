@@ -1,4 +1,4 @@
-package day_16_parser
+package parser
 
 import (
 	"fmt"
@@ -41,7 +41,6 @@ func ParsePacketInfoFromLiteralPacket(bitString []string) PacketInfo {
 		}
 	}
 	numberOfParsedBits := 5 * (len(valueBits) / 4)
-	//numberOfTrailingZeros := numberOfParsedBits % 4
 	endPosition := numberOfParsedBits + 6
 	value, _ := strconv.ParseInt(strings.Join(valueBits, ""), 2, 64)
 	version, _ := ParsePacketVersionAndId(bitString)
@@ -98,17 +97,96 @@ func isAllZeros(bitString []string) bool{
 	}
 	return true
 }
+func getPacketValues(infos []PacketInfo) []int{
+	values := []int{}
+	for _, info := range infos {
+		values = append(values, info.Value)
+	}
+	return values
+}
+func sumList(nums []int) int {
+	sum := 0
+	for _, num := range nums {
+		sum += num
+	}
+	return sum
+}
+func multList(nums []int) int {
+	sum := 1
+	for _, num := range nums {
+		sum *= num
+	}
+	return sum
+}
+
+func minIt(nums []int) int {
+	min := nums[0]
+	for _, num := range nums[1:] {
+		if num < min {
+			min = num
+		}
+	}
+	return min
+}
+func maxIt(nums []int) int {
+	max := nums[0]
+	for _, num := range nums[1:] {
+		if num > max {
+			max = num
+		}
+	}
+	return max
+}
+
+func greaterThan(nums []int) int {
+	if nums[0] > nums[1] {
+		return 1
+	}
+	return 0
+}
+func lessThan(nums []int) int {
+	if nums[0] < nums[1] {
+		return 1
+	}
+	return 0
+}
+
+func equal(nums []int) int {
+	if nums[0] == nums[1] {
+		return 1
+	}
+	return 0
+}
+
+
+func GetValueForPacket(infos []PacketInfo, packetTypeId int) int{
+	switch packetTypeId {
+	case 0:
+		return sumList(getPacketValues(infos))
+	case 1:
+		return multList(getPacketValues(infos))
+	case 2:
+		return minIt(getPacketValues(infos))
+	case 3:
+		return maxIt(getPacketValues(infos))
+	case 5:
+		return greaterThan(getPacketValues(infos))
+	case 6:
+		return lessThan(getPacketValues(infos))
+	}
+	return equal(getPacketValues(infos))
+}
 func ParseOperatorPacketInfo(bitString []string) PacketInfo {
-	version, _  := ParsePacketVersionAndId(bitString)
+	version, typeId  := ParsePacketVersionAndId(bitString)
 	lengthTypeId := bitString[6]
 	if lengthTypeId == "0" {
 		packetInfos, length := ParseOperatorSubPacketInfosByLength(bitString)
 		versionSumOfSubPackets := sumVersions(packetInfos)
-		return PacketInfo{VersionSums: versionSumOfSubPackets + version, Length: length}
+		return PacketInfo{VersionSums: versionSumOfSubPackets + version, Length: length, Value: GetValueForPacket(packetInfos, typeId)}
 	}
 	packetInfos, length := ParseOperatorSubPacketByNumberOfPackets(bitString)
 	versionSumOfSubPackets := sumVersions(packetInfos)
-	return PacketInfo{VersionSums: versionSumOfSubPackets + version, Length: length}
+	return PacketInfo{VersionSums: versionSumOfSubPackets + version, Length: length, Value: GetValueForPacket(packetInfos, typeId)}
 }
 
 func sumVersions(packetInfos []PacketInfo) int {
